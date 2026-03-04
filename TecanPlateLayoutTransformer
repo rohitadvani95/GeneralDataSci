@@ -1,0 +1,19 @@
+"""Transpose a plate layout CSV from row format to column format."""
+
+import pandas as pd
+from pathlib import Path
+
+input_path = Path(
+    '/Users/rohitadvani/Documents/Service/2039/2039Rows.csv'
+)
+output_path = Path(
+    '/Users/rohitadvani/Documents/Service/2039/2039Cols.csv'
+)
+
+# Read, transpose, and write in minimal steps
+rawdata = pd.read_csv(input_path, header=None)
+# Reverse after transpose to correct liquid handler capture order
+transposed = rawdata.T[::-1]
+
+output_path.parent.mkdir(parents=True, exist_ok=True)
+transposed.to_csv(output_path, index=False, header=False)
