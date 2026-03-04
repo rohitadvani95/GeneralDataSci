@@ -1,0 +1,31 @@
+"""Merge user usage, user device, and android device data."""
+
+import pandas as pd
+
+base_path = r'C:\Users\kirby\OneDrive\Documents'
+
+android_devices = pd.read_csv(f'{base_path}\\android_devices.csv')
+user_device = pd.read_csv(f'{base_path}\\user_device.csv')
+user_usage = pd.read_csv(f'{base_path}\\user_usage.csv')
+
+# Step 1: Merge user_usage with user_device on use_id
+usage_with_device = pd.merge(
+    user_usage, user_device,
+    on='use_id',
+    how='left'
+)
+
+# Step 2: Merge the result with android_devices on device/Model
+fully_merged = pd.merge(
+    usage_with_device, android_devices,
+    left_on='device', right_on='Model',
+    how='left',
+    indicator=True
+)
+
+print(f"user_usage rows: {len(user_usage)}")
+print(f"user_device rows: {len(user_device)}")
+print(f"android_devices rows: {len(android_devices)}")
+print(f"Final merged rows: {len(fully_merged)}")
+print(f"\nMerge indicator counts:\n{fully_merged['_merge'].value_counts()}")
+print(f"\n{fully_merged.head()}")
